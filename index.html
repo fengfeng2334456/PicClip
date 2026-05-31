@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HC Tools - Free Online Image Tools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ========================================
+           CSS 变量
+           ======================================== */
+        :root {
+            --primary-color: #3498db;
+            --primary-dark: #2980b9;
+            --secondary-color: #9b59b6;
+            --success-color: #27ae60;
+            --text-dark: #333;
+            --text-light: #666;
+            --text-muted: #999;
+            --bg-white: rgba(255, 255, 255, 0.95);
+            --bg-overlay: rgba(255, 255, 255, 0.08);
+            --border-light: #ddd;
+            --shadow-sm: 0 4px 15px rgba(0,0,0,0.1);
+            --shadow-md: 0 8px 32px rgba(0,0,0,0.2);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --transition: all 0.3s;
+        }
+
+        /* ========================================
+           基础样式
+           ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        /* ========================================
+           导航栏
+           ======================================== */
+        .navbar {
+            background: var(--bg-overlay);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 0 40px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary-color), #6dd5fa);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9em;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .nav-item {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 0.95em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .lang-switcher {
+            display: flex;
+            gap: 5px;
+            margin-left: 20px;
+            padding-left: 20px;
+            border-left: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .lang-btn {
+            padding: 5px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            background: transparent;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: var(--transition);
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .lang-btn:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+            color: #ffffff;
+        }
+
+        .lang-btn.active {
+            background: rgba(52, 152, 219, 0.6);
+            color: white;
+            border-color: rgba(52, 152, 219, 0.8);
+        }
+
+        /* ========================================
+           主容器
+           ======================================== */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* ========================================
+           首页 - 工具卡片
+           ======================================== */
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 30px 0 20px;
+        }
+
+        .page-title {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .page-subtitle {
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 1.1em;
+            font-weight: 400;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .tools-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 600px) {
+            .tools-grid { grid-template-columns: 1fr; }
+        }
+
+        .tool-card {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-md);
+        }
+
+        .tool-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+
+        .tool-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            color: white;
+        }
+
+        .tool-icon.blue { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); }
+        .tool-icon.purple { background: linear-gradient(135deg, var(--secondary-color), #8e44ad); }
+        .tool-icon.green { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+        .tool-icon.orange { background: linear-gradient(135deg, #e67e22, #d35400); }
+
+        .tool-info h3 {
+            font-size: 1.3em;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .tool-info p {
+            color: var(--text-light);
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .tool-arrow {
+            margin-top: 15px;
+            color: var(--primary-color);
+            font-size: 1.2em;
+        }
+
+        /* ========================================
+           工具页面布局
+           ======================================== */
+        .tool-page {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tool-page-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .back-btn {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.2em;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .tool-page-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .tool-page-title .tool-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0;
+            border-radius: var(--radius-sm);
+            font-size: 1.5em;
+        }
+
+        .tool-page-title h1 {
+            font-size: 1.8em;
+            color: white;
+        }
+
+        .tool-page-title p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.95em;
+        }
+
+        /* ========================================
+           工具内容卡片
+           ======================================== */
+        .tool-content-card {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .tool-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .tool-layout {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        .tool-left-panel,
+        .tool-right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .tool-panel-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tool-panel-title i {
+            color: var(--primary-color);
+        }
+
+        /* ========================================
+           上传区域
+           ======================================== */
+        .upload-area {
+            border: 2px dashed var(--primary-color);
+            border-radius: var(--radius-md);
+            padding: 50px 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background: rgba(52, 152, 219, 0.05);
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-dark);
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .upload-area.dragover {
+            border-color: var(--primary-dark);
+            background: rgba(52, 152, 219, 0.15);
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 60px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            color: var(--text-dark);
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+
+        .upload-hint {
+            color: var(--text-light);
+            font-size: 0.9em;
+            font-style: italic;
+        }
+
+        .hidden-input {
+            display: none;
+        }
+
+        /* ========================================
+           预览区域
+           ======================================== */
+        .preview-section {
+            margin-top: 20px;
+        }
+
+        .preview-box {
+            background: repeating-conic-gradient(#e0e0e0 0% 25%, #fff 0% 50%) 50% / 20px 20px;
+            border-radius: var(--radius-md);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .preview-box img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: var(--radius-sm);
+        }
+
+        .preview-label {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: var(--text-light);
+        }
+
+        .dual-preview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .dual-preview { grid-template-columns: 1fr; }
+        }
+
+        /* ========================================
+           占位符
+           ======================================== */
+        .upload-placeholder,
+        .result-placeholder {
+            text-align: center;
+            padding: 40px;
+            background: repeating-conic-gradient(#f0f0f0 0% 25%, #fff 0% 50%) 50% / 40px 40px;
+            border-radius: var(--radius-md);
+            border: 2px dashed var(--border-light);
+            color: var(--text-muted);
+        }
+
+        .upload-placeholder i,
+        .result-placeholder i {
+            font-size: 3em;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .result-placeholder i {
+            font-size: 2em;
+        }
+
+        /* ========================================
+           设置区域
+           ======================================== */
+        .size-section,
+        .options-section,
+        .result-section {
+            background: rgba(52, 152, 219, 0.05);
+            padding: 15px;
+            border-radius: var(--radius-md);
+        }
+
+        .section-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.75em;
+        }
+
+        .size-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        @media (max-width: 600px) {
+            .size-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .size-chip {
+            padding: 12px 8px;
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            background: white;
+        }
+
+        .size-chip:hover {
+            border-color: var(--primary-color);
+        }
+
+        .size-chip.selected {
+            border-color: var(--primary-color);
+            background: linear-gradient(135deg, #ebf5fb, #d6eaf8);
+        }
+
+        .size-chip .icon {
+            font-size: 1.2em;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+
+        .size-chip.selected .icon {
+            color: var(--primary-dark);
+        }
+
+        .size-chip .size {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .size-chip.selected .size {
+            color: var(--primary-dark);
+        }
+
+        /* ========================================
+           选项
+           ======================================== */
+        .option-box {
+            margin-bottom: 10px;
+            padding: 15px;
+            background: rgba(52, 152, 219, 0.08);
+            border-left: 4px solid var(--primary-color);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .option-label {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .option-label span:first-child {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .option-label span:last-child {
+            font-size: 0.85em;
+            color: var(--text-light);
+        }
+
+        /* 开关 */
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.3s;
+            border-radius: 26px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background: var(--primary-color);
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(22px);
+        }
+
+        /* ========================================
+           容差控制
+           ======================================== */
+        .tolerance-control {
+            padding: 15px;
+            background: rgba(155, 89, 182, 0.08);
+            border-radius: var(--radius-sm);
+        }
+
+        .tolerance-control label {
+            font-weight: 500;
+            color: var(--text-dark);
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .tolerance-control input[type="range"] {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            background: #ddd;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .tolerance-control input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .tolerance-value {
+            text-align: center;
+            font-weight: 700;
+            color: var(--secondary-color);
+            font-size: 1.2em;
+            margin-top: 8px;
+        }
+
+        /* ========================================
+           按钮
+           ======================================== */
+        .btn {
+            padding: 14px 28px;
+            border-radius: var(--radius-sm);
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(135deg, var(--primary-dark), #1f618d);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.5);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #ccc !important;
+        }
+
+        .action-buttons {
+            margin-top: 15px;
+        }
+
+        .action-buttons .btn {
+            flex: 1;
+        }
+
+        /* ========================================
+           结果区域
+           ======================================== */
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .result-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .result-item {
+            text-align: center;
+            padding: 15px 10px;
+            background: white;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .result-item:hover {
+            border-color: var(--primary-color);
+            transform: scale(1.05);
+        }
+
+        .result-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 8px;
+            object-fit: contain;
+        }
+
+        .result-size {
+            font-size: 0.85em;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        /* ========================================
+           提示框
+           ======================================== */
+        .tip-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(52, 152, 219, 0.08);
+            border-left: 4px solid var(--primary-color);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            font-size: 0.9em;
+            color: var(--text-light);
+        }
+
+        /* ========================================
+           帮助页面
+           ======================================== */
+        .help-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .help-item {
+            background: var(--bg-white);
+            border-radius: var(--radius-md);
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .help-item h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .help-item p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* ========================================
+           评分页面
+           ======================================== */
+        .rating-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .rating-box {
+            background: var(--bg-white);
+            border-radius: var(--radius-md);
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 20px;
+        }
+
+        .rating-stars {
+            font-size: 2.5em;
+            margin: 20px 0;
+            cursor: pointer;
+        }
+
+        .rating-stars i {
+            color: #ddd;
+            transition: color 0.2s;
+        }
+
+        .rating-stars i.active {
+            color: #f39c12;
+        }
+
+        .rating-form textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+            margin-top: 15px;
+        }
+
+        .rating-form textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .rating-submit {
+            margin-top: 15px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 1em;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .rating-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.5);
+        }
+
+        .rating-history {
+            background: var(--bg-white);
+            border-radius: var(--radius-md);
+            padding: 20px;
+        }
+
+        .rating-history h3 {
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        .rating-item {
+            padding: 15px;
+            background: rgba(52, 152, 219, 0.05);
+            border-radius: var(--radius-sm);
+            margin-bottom: 10px;
+        }
+
+        .rating-item .stars {
+            color: #f39c12;
+            margin-bottom: 5px;
+        }
+
+        .rating-item .comment {
+            color: #555;
+            font-size: 0.95em;
+        }
+
+        .rating-item .date {
+            color: var(--text-muted);
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+
+        /* ========================================
+           页脚
+           ======================================== */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.85em;
+        }
+
+        /* ========================================
+           Toast 提示
+           ======================================== */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* ========================================
+           裁剪工具样式
+           ======================================== */
+        .crop-file-list-wrap {
+            max-height: 120px;
+            overflow-y: auto;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            background: #fafafa;
+        }
+
+        .crop-empty-list {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-muted);
+            font-size: 0.9em;
+        }
+
+        .crop-file-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .crop-file-item:last-child { border-bottom: none; }
+        .crop-file-item:hover { background: #f0f0f0; }
+        .crop-file-item.active { background: rgba(39, 174, 96, 0.1); border-left: 3px solid #27ae60; }
+
+        .crop-file-item img {
+            width: 36px; height: 36px; object-fit: cover; border-radius: 4px;
+        }
+
+        .crop-file-name {
+            flex: 1; font-size: 0.85em; color: var(--text-dark);
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+
+        .crop-file-remove {
+            color: #ccc; font-size: 1.2em; cursor: pointer; padding: 0 4px; transition: color 0.2s;
+        }
+        .crop-file-remove:hover { color: #e74c3c; }
+
+        .crop-canvas-wrap {
+            background: repeating-conic-gradient(#e0e0e0 0% 25%, #fff 0% 50%) 50% / 20px 20px;
+            border-radius: var(--radius-md); padding: 10px; text-align: center;
+            min-height: 100px; display: flex; align-items: center; justify-content: center;
+        }
+        .crop-canvas-wrap canvas { max-width: 100%; display: block; }
+
+        .crop-preview-section { margin-top: 10px; }
+
+        .crop-preview-box {
+            background: repeating-conic-gradient(#e0e0e0 0% 25%, #fff 0% 50%) 50% / 20px 20px;
+            border-radius: var(--radius-sm); padding: 10px; text-align: center;
+            min-height: 80px; display: flex; align-items: center; justify-content: center;
+        }
+        .crop-preview-box canvas { max-width: 100%; display: block; }
+
+        /* 裁剪通用区块 */
+        .crop-section {
+            background: rgba(39, 174, 96, 0.05);
+            padding: 15px; border-radius: var(--radius-md);
+        }
+
+        /* 预设芯片 */
+        .crop-preset-chips {
+            display: flex; gap: 8px; flex-wrap: wrap;
+        }
+
+        .crop-preset-chip {
+            padding: 10px 18px; border: 2px solid var(--border-light);
+            border-radius: var(--radius-sm); text-align: center; cursor: pointer;
+            transition: var(--transition); background: white; font-size: 0.9em; font-weight: 500;
+        }
+        .crop-preset-chip:hover { border-color: #27ae60; }
+        .crop-preset-chip.selected { border-color: #27ae60; background: rgba(39, 174, 96, 0.1); color: #27ae60; }
+
+        /* 比例芯片 */
+        .crop-ratio-chips {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+        }
+
+        .crop-ratio-chip {
+            padding: 10px 8px; border: 2px solid var(--border-light);
+            border-radius: var(--radius-sm); text-align: center; cursor: pointer;
+            transition: var(--transition); background: white; font-size: 0.9em; font-weight: 500;
+        }
+        .crop-ratio-chip:hover { border-color: #27ae60; }
+        .crop-ratio-chip.selected { border-color: #27ae60; background: rgba(39, 174, 96, 0.1); color: #27ae60; }
+
+        /* 输入行 */
+        .crop-input-row {
+            margin-bottom: 10px;
+        }
+
+        .crop-input-row label {
+            display: block; font-weight: 500; color: var(--text-dark);
+            margin-bottom: 4px; font-size: 0.9em;
+        }
+
+        .crop-input {
+            width: 100%; padding: 8px 12px; border: 2px solid var(--border-light);
+            border-radius: var(--radius-sm); font-size: 0.95em; background: white;
+        }
+        .crop-input:focus { outline: none; border-color: #27ae60; }
+        .crop-input:disabled { background: #f5f5f5; color: #999; cursor: not-allowed; }
+
+        /* 导出选项 */
+        .crop-option-row { margin-bottom: 12px; }
+        .crop-option-row label { display: block; font-weight: 500; color: var(--text-dark); margin-bottom: 6px; font-size: 0.9em; }
+
+        .crop-select {
+            width: 100%; padding: 8px 12px; border: 2px solid var(--border-light);
+            border-radius: var(--radius-sm); font-size: 0.95em; background: white; cursor: pointer;
+        }
+        .crop-select:focus { outline: none; border-color: #27ae60; }
+
+        .crop-quality-row { display: flex; align-items: center; gap: 12px; }
+        .crop-quality-row input[type="range"] {
+            flex: 1; height: 6px; -webkit-appearance: none; background: #ddd; border-radius: 3px; outline: none;
+        }
+        .crop-quality-row input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 18px; height: 18px; background: #27ae60; border-radius: 50%; cursor: pointer;
+        }
+        .crop-quality-row span { font-weight: 600; color: #27ae60; min-width: 40px; text-align: right; }
+
+        /* 进度 */
+        .crop-progress-wrap { margin-top: 10px; }
+        .crop-progress-bar { height: 8px; background: #eee; border-radius: 4px; overflow: hidden; }
+        .crop-progress-fill { height: 100%; width: 0%; background: linear-gradient(135deg, #27ae60, #2ecc71); border-radius: 4px; transition: width 0.3s; }
+        .crop-progress-text { text-align: center; font-size: 0.85em; color: var(--text-light); margin-top: 6px; }
+        .crop-result-info { text-align: center; font-size: 0.9em; color: #27ae60; font-weight: 600; padding: 8px; }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="logo" onclick="showPage('home')">
+            <div class="logo-icon">
+                <i class="fas fa-tools"></i>
+            </div>
+            <span>HC Tools</span>
+        </div>
+        <div class="nav-menu">
+            <a class="nav-item active" data-page="home" onclick="showPage('home')">
+                <i class="fas fa-th-large"></i>
+                <span data-i18n="nav_tools">Tools</span>
+            </a>
+            <a class="nav-item" data-page="help" onclick="showPage('help')">
+                <i class="fas fa-question-circle"></i>
+                <span data-i18n="nav_help">Help</span>
+            </a>
+            <a class="nav-item" data-page="rating" onclick="showPage('rating')">
+                <i class="fas fa-star"></i>
+                <span data-i18n="nav_rating">Rating</span>
+            </a>
+            <div class="lang-switcher">
+                <button class="lang-btn active" data-lang="en">EN</button>
+                <button class="lang-btn" data-lang="zh">中文</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主容器 -->
+    <div class="main-container">
+        <!-- 首页 - 工具卡片 -->
+        <div class="page active" id="page-home">
+            <div class="page-header">
+                <h1 class="page-title" data-i18n="home_title">Free Online Image Tools</h1>
+                <p class="page-subtitle" data-i18n="home_subtitle">Click a tool to start processing your images</p>
+            </div>
+
+            <div class="tools-grid">
+                <div class="tool-card" onclick="showTool('ico')">
+                    <div class="tool-icon blue">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    <div class="tool-info">
+                        <h3 data-i18n="ico_name">Image to ICO</h3>
+                        <p data-i18n="ico_desc">Convert images to ICO icon format with multiple sizes support</p>
+                    </div>
+                    <div class="tool-arrow"><i class="fas fa-arrow-right"></i></div>
+                </div>
+
+                <div class="tool-card" onclick="showTool('bg')">
+                    <div class="tool-icon purple">
+                        <i class="fas fa-eraser"></i>
+                    </div>
+                    <div class="tool-info">
+                        <h3 data-i18n="bg_name">Remove Background</h3>
+                        <p data-i18n="bg_desc">Make image background transparent with one click</p>
+                    </div>
+                    <div class="tool-arrow"><i class="fas fa-arrow-right"></i></div>
+                </div>
+
+                <div class="tool-card" onclick="showTool('crop')">
+                    <div class="tool-icon green">
+                        <i class="fas fa-crop-alt"></i>
+                    </div>
+                    <div class="tool-info">
+                        <h3 data-i18n="crop_name">Crop & Remove Watermark</h3>
+                        <p data-i18n="crop_desc">Batch crop watermark from images and convert format</p>
+                    </div>
+                    <div class="tool-arrow"><i class="fas fa-arrow-right"></i></div>
+                </div>
+
+                <div class="tool-card" onclick="Utils.showToast('Coming soon!')">
+                    <div class="tool-icon orange">
+                        <i class="fas fa-compress-alt"></i>
+                    </div>
+                    <div class="tool-info">
+                        <h3 data-i18n="tool3_name">Image Compress</h3>
+                        <p data-i18n="tool3_desc">Reduce image file size without losing quality</p>
+                    </div>
+                    <div class="tool-arrow"><i class="fas fa-clock"></i></div>
+                </div>
+
+                <div class="tool-card" onclick="Utils.showToast('Coming soon!')">
+                    <div class="tool-icon orange">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <div class="tool-info">
+                        <h3 data-i18n="tool4_name">Format Convert</h3>
+                        <p data-i18n="tool4_desc">Convert images between PNG, JPG, WEBP formats</p>
+                    </div>
+                    <div class="tool-arrow"><i class="fas fa-clock"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ICO 工具页面 -->
+        <div class="page tool-page" id="page-ico">
+            <div class="tool-page-header">
+                <div class="back-btn" onclick="showPage('home')">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+                <div class="tool-page-title">
+                    <div class="tool-icon blue">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    <div>
+                        <h1 data-i18n="ico_name">Image to ICO</h1>
+                        <p data-i18n="ico_page_desc">Convert your images to ICO icon format</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tool-content-card">
+                <div class="tool-layout">
+                    <!-- 左侧 - 上传与预览 -->
+                    <div class="tool-left-panel">
+                        <div class="tool-panel-title">
+                            <i class="fas fa-upload"></i>
+                            <span>Upload Image</span>
+                        </div>
+                        <div class="upload-area" id="ico-upload-area">
+                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <p class="upload-text" data-i18n="upload_text">Click or drag image here to upload</p>
+                            <p class="upload-hint" data-i18n="upload_hint">Supports: JPG, PNG, GIF, WEBP (Max 10MB)</p>
+                            <input type="file" id="ico-file-input" class="hidden-input" accept="image/*">
+                        </div>
+
+                        <div class="preview-section" id="ico-preview-section">
+                            <div class="preview-box">
+                                <img id="ico-preview-img" alt="Preview" style="display: none;">
+                                <div id="ico-upload-placeholder" class="upload-placeholder">
+                                    <i class="fas fa-image"></i>
+                                    <span data-i18n="upload_placeholder">Upload an image to see preview</span>
+                                </div>
+                                <div class="preview-label" data-i18n="preview_label">Image Preview</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 右侧 - 设置与操作 -->
+                    <div class="tool-right-panel">
+                        <div class="size-section" id="ico-size-section">
+                            <div class="tool-panel-title">
+                                <i class="fas fa-th"></i>
+                                <span data-i18n="select_size">Select Icon Size (multiple allowed)</span>
+                            </div>
+                            <div class="size-grid" id="ico-size-grid">
+                                <!-- 动态生成 -->
+                            </div>
+                        </div>
+
+                        <div class="options-section" id="ico-options-section">
+                            <div class="tool-panel-title">
+                                <i class="fas fa-cog"></i>
+                                <span>Options</span>
+                            </div>
+                            <div class="option-box">
+                                <div class="option-label">
+                                    <span data-i18n="rounded_title">Rounded Corners</span>
+                                    <span data-i18n="rounded_hint">Apply rounded corners to icons</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="ico-rounded-toggle" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" id="ico-generate-btn" disabled>
+                                <i class="fas fa-sync-alt"></i>
+                                <span data-i18n="generate_btn">Generate ICO</span>
+                            </button>
+                        </div>
+
+                        <div class="result-section" id="ico-result-section">
+                            <div class="tool-panel-title">
+                                <i class="fas fa-check-circle"></i>
+                                <span data-i18n="generated_icons">Generated Icons</span>
+                            </div>
+                            <div class="result-grid" id="ico-result-grid">
+                                <div class="result-placeholder" style="grid-column: 1/-1; text-align: center; padding: 40px; color: #999;">
+                                    <i class="fas fa-magic" style="font-size: 2em; margin-bottom: 10px; display: block;"></i>
+                                    <span data-i18n="generated_placeholder">Generated icons will appear here</span>
+                                </div>
+                            </div>
+                            <div class="action-buttons" style="margin-top: 15px;">
+                                <button class="btn btn-primary" id="ico-download-all-btn" disabled style="background: linear-gradient(135deg, #27ae60, #2ecc71);">
+                                    <i class="fas fa-download"></i>
+                                    <span data-i18n="download_all_btn">Download All (ZIP)</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box" id="ico-tip">
+                    <p data-i18n="ico_tip">💡 Tip: 64×64 is recommended for most desktop icons. Click individual icons to download separately, or use "Download All" to get all sizes in a ZIP file.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 去背景工具页面 -->
+        <div class="page tool-page" id="page-bg">
+            <div class="tool-page-header">
+                <div class="back-btn" onclick="showPage('home')">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+                <div class="tool-page-title">
+                    <div class="tool-icon purple">
+                        <i class="fas fa-eraser"></i>
+                    </div>
+                    <div>
+                        <h1 data-i18n="bg_name">Remove Background</h1>
+                        <p data-i18n="bg_page_desc">Make your image background transparent</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tool-content-card">
+                <div class="tool-layout">
+                    <!-- 左侧 - 上传与预览 -->
+                    <div class="tool-left-panel">
+                        <div class="tool-panel-title" style="color: #9b59b6;">
+                            <i class="fas fa-upload"></i>
+                            <span>Upload Image</span>
+                        </div>
+                        <div class="upload-area" id="bg-upload-area">
+                            <div class="upload-icon" style="color: #9b59b6;"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <p class="upload-text" data-i18n="bg_upload_text">Click or drag image here</p>
+                            <p class="upload-hint" data-i18n="bg_upload_hint">Supports: JPG, PNG, GIF, WEBP</p>
+                            <input type="file" id="bg-file-input" class="hidden-input" accept="image/*">
+                        </div>
+
+                        <div class="preview-section" id="bg-preview-section">
+                            <div class="dual-preview">
+                                <div class="preview-box">
+                                    <img id="bg-original-preview" alt="Original" style="display: none;">
+                                    <div id="bg-original-placeholder" class="upload-placeholder" style="padding: 20px;">
+                                        <i class="fas fa-image" style="font-size: 2em;"></i>
+                                        <span data-i18n="original_preview">Original Preview</span>
+                                    </div>
+                                    <div class="preview-label" data-i18n="bg_original">Original</div>
+                                </div>
+                                <div class="preview-box">
+                                    <img id="bg-result-preview" alt="Result" style="display: none;">
+                                    <div id="bg-result-placeholder" class="upload-placeholder" style="padding: 20px;">
+                                        <i class="fas fa-magic" style="font-size: 2em;"></i>
+                                        <span data-i18n="result_preview">Result Preview</span>
+                                    </div>
+                                    <div class="preview-label" data-i18n="bg_result">Result (transparent)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 右侧 - 设置与操作 -->
+                    <div class="tool-right-panel">
+                        <div class="tolerance-control" id="bg-tolerance-control">
+                            <div class="tool-panel-title" style="color: #9b59b6;">
+                                <i class="fas fa-sliders-h"></i>
+                                <span>Adjust Settings</span>
+                            </div>
+                            <label data-i18n="tolerance_label">Tolerance - Adjust to control background removal range</label>
+                            <input type="range" id="bg-tolerance-slider" min="0" max="50" value="15">
+                            <div class="tolerance-value"><span id="bg-tolerance-value">15</span></div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" id="bg-process-btn" disabled style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">
+                                <i class="fas fa-magic"></i>
+                                <span data-i18n="process_btn">Remove Background</span>
+                            </button>
+                            <button class="btn btn-primary" id="bg-download-btn" disabled style="background: linear-gradient(135deg, #27ae60, #2ecc71);">
+                                <i class="fas fa-download"></i>
+                                <span data-i18n="download_btn">Download PNG</span>
+                            </button>
+                        </div>
+
+                        <div class="tip-box" id="bg-tip">
+                            <p data-i18n="bg_tip">💡 Tip: Lower tolerance = precise removal, Higher tolerance = more aggressive removal</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 裁剪去水印工具页面 -->
+        <div class="page tool-page" id="page-crop">
+            <div class="tool-page-header">
+                <div class="back-btn" onclick="showPage('home')">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+                <div class="tool-page-title">
+                    <div class="tool-icon green">
+                        <i class="fas fa-crop-alt"></i>
+                    </div>
+                    <div>
+                        <h1 data-i18n="crop_name">Crop & Remove Watermark</h1>
+                        <p data-i18n="crop_page_desc">Batch crop watermarks and export images</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tool-content-card">
+                <div class="tool-layout">
+                    <!-- 左侧 - 上传、文件列表、画布、预览 -->
+                    <div class="tool-left-panel">
+                        <div class="tool-panel-title" style="color: #27ae60;">
+                            <i class="fas fa-upload"></i>
+                            <span>Upload Images</span>
+                        </div>
+                        <div class="upload-area" id="crop-upload-area">
+                            <div class="upload-icon" style="color: #27ae60;"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <p class="upload-text" data-i18n="crop_upload_text">Click or drag images here (batch)</p>
+                            <p class="upload-hint" data-i18n="crop_upload_hint">Supports: JPG, PNG, GIF, WEBP (multiple files)</p>
+                            <input type="file" id="crop-file-input" class="hidden-input" accept="image/*" multiple>
+                        </div>
+
+                        <!-- 文件列表 -->
+                        <div class="crop-file-list-wrap" id="crop-file-list">
+                            <div class="crop-empty-list" data-i18n="crop_no_images">Please upload images first</div>
+                        </div>
+
+                        <!-- 裁剪画布 -->
+                        <div class="crop-canvas-wrap" id="crop-canvas-wrap">
+                            <canvas id="crop-canvas"></canvas>
+                        </div>
+
+                        <!-- 裁剪预览 -->
+                        <div class="crop-preview-section">
+                            <div class="tool-panel-title" style="color: #27ae60;">
+                                <i class="fas fa-eye"></i>
+                                <span data-i18n="crop_result_preview">Crop Preview</span>
+                            </div>
+                            <div class="crop-preview-box">
+                                <canvas id="crop-preview-canvas"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 右侧 - 参数、操作 -->
+                    <div class="tool-right-panel">
+                        <!-- 裁剪参数 -->
+                        <div class="crop-section">
+                            <div class="tool-panel-title" style="color: #27ae60;">
+                                <i class="fas fa-cut"></i>
+                                <span>Crop Settings</span>
+                            </div>
+                            <div class="crop-input-row">
+                                <label data-i18n="crop_crop_bottom">Crop Bottom (px)</label>
+                                <input type="number" id="crop-bottom" class="crop-input" value="100" min="0">
+                            </div>
+                            <div class="crop-input-row">
+                                <label data-i18n="crop_crop_right">Crop Right (px)</label>
+                                <input type="number" id="crop-right" class="crop-input" value="100" min="0">
+                            </div>
+                        </div>
+
+                        <!-- 比例选择 -->
+                        <div class="crop-section">
+                            <div class="tool-panel-title" style="color: #27ae60;">
+                                <i class="fas fa-expand"></i>
+                                <span data-i18n="crop_ratio_label">Output Ratio</span>
+                            </div>
+                            <div class="crop-ratio-chips" id="crop-ratios">
+                                <!-- 动态生成 -->
+                            </div>
+                        </div>
+
+                        <!-- 导出设置 -->
+                        <div class="crop-section">
+                            <div class="tool-panel-title" style="color: #27ae60;">
+                                <i class="fas fa-file-export"></i>
+                                <span>Export Settings</span>
+                            </div>
+                            <div class="crop-option-row">
+                                <label data-i18n="crop_format_label">Export Format</label>
+                                <select id="crop-format" class="crop-select">
+                                    <option value="png">PNG</option>
+                                    <option value="jpeg" selected>JPG</option>
+                                    <option value="webp">WEBP</option>
+                                </select>
+                            </div>
+                            <div class="crop-option-row" id="crop-quality-wrap">
+                                <label data-i18n="crop_quality_label">Output Quality</label>
+                                <div class="crop-quality-row">
+                                    <input type="range" id="crop-quality" min="0.1" max="1" step="0.05" value="0.92">
+                                    <span id="crop-quality-value">92%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 操作按钮 -->
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" id="crop-process-btn" disabled style="background: linear-gradient(135deg, #27ae60, #2ecc71);">
+                                <i class="fas fa-crop-alt"></i>
+                                <span data-i18n="crop_process_btn">Batch Crop</span>
+                            </button>
+                        </div>
+
+                        <!-- 进度条 -->
+                        <div class="crop-progress-wrap" id="crop-progress-wrap" style="display: none;">
+                            <div class="crop-progress-bar">
+                                <div class="crop-progress-fill" id="crop-progress-bar"></div>
+                            </div>
+                            <div class="crop-progress-text" id="crop-progress-text">0 / 0</div>
+                        </div>
+
+                        <div class="crop-result-info" id="crop-result-count"></div>
+
+                        <!-- 下载按钮 -->
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" id="crop-download-btn" disabled style="background: linear-gradient(135deg, #2980b9, #3498db);">
+                                <i class="fas fa-download"></i>
+                                <span data-i18n="crop_download_btn">Download All (ZIP)</span>
+                            </button>
+                        </div>
+
+                        <!-- 清空按钮 -->
+                        <div class="action-buttons">
+                            <button class="btn" id="crop-clear-btn" style="background: #eee; color: #666;">
+                                <i class="fas fa-trash-alt"></i>
+                                <span data-i18n="crop_clear_btn">Clear All</span>
+                            </button>
+                        </div>
+
+                        <div class="tip-box">
+                            <p data-i18n="crop_template_hint">💡 Set crop parameters, it will be applied to all images.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 帮助页面 -->
+        <div class="page" id="page-help">
+            <div class="page-header">
+                <h1 class="page-title" data-i18n="help_title">Help & FAQ</h1>
+                <p class="page-subtitle" data-i18n="help_subtitle">Learn how to use our tools</p>
+            </div>
+            <div class="help-list">
+                <div class="help-item">
+                    <h4><i class="fas fa-image"></i> <span data-i18n="help1_title">Image to ICO Converter</span></h4>
+                    <p data-i18n="help1_desc">Upload any PNG, JPG, GIF, or WEBP image. Select your desired icon sizes (multiple sizes can be selected). Enable rounded corners if needed. Click Generate to create ICO files that can be downloaded individually.</p>
+                </div>
+                <div class="help-item">
+                    <h4><i class="fas fa-eraser"></i> <span data-i18n="help2_title">Remove Background</span></h4>
+                    <p data-i18n="help2_desc">Upload an image with a solid background (white or light color). Adjust the tolerance slider to control how strictly the background is removed. Click Remove Background to process and download the result.</p>
+                </div>
+                <div class="help-item">
+                    <h4><i class="fas fa-file"></i> <span data-i18n="help3_title">Supported Formats</span></h4>
+                    <p data-i18n="help3_desc">All tools support: PNG, JPG, GIF, and WEBP images. Maximum file size is 10MB. All processing is done locally in your browser - your images are never uploaded to any server.</p>
+                </div>
+                <div class="help-item">
+                    <h4><i class="fas fa-shield-alt"></i> <span data-i18n="help4_title">Privacy & Security</span></h4>
+                    <p data-i18n="help4_desc">All image processing happens in your browser. Your images are never uploaded to any server. Close the browser to clear all data.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 评分页面 -->
+        <div class="page" id="page-rating">
+            <div class="page-header">
+                <h1 class="page-title" data-i18n="rating_title">Rate Our Service</h1>
+                <p class="page-subtitle" data-i18n="rating_subtitle">Your feedback helps us improve</p>
+            </div>
+            <div class="rating-container">
+                <div class="rating-box">
+                    <p data-i18n="rating_prompt">Click stars to rate</p>
+                    <div class="rating-stars" id="rating-stars">
+                        <i class="fas fa-star" data-rating="1"></i>
+                        <i class="fas fa-star" data-rating="2"></i>
+                        <i class="fas fa-star" data-rating="3"></i>
+                        <i class="fas fa-star" data-rating="4"></i>
+                        <i class="fas fa-star" data-rating="5"></i>
+                    </div>
+                    <p id="rating-text"></p>
+                    <div class="rating-form">
+                        <textarea id="rating-comment" placeholder="Share your thoughts (optional)..." data-i18n-placeholder="rating_placeholder"></textarea>
+                        <button class="rating-submit" id="rating-submit" data-i18n="submit_rating">Submit Rating</button>
+                    </div>
+                </div>
+                <div class="rating-history">
+                    <h3 data-i18n="rating_history">Rating History</h3>
+                    <div id="rating-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <p>© 2024 HC Tools · <span data-i18n="footer_text">All tools run locally in your browser</span></p>
+    </footer>
+
+    <!-- Toast 提示 -->
+    <div class="toast" id="toast"></div>
+
+    <!-- 模块化脚本 -->
+    <script src="config.js"></script>
+    <script src="i18n.js"></script>
+    <script src="utils.js"></script>
+    <script src="ico-tool.js"></script>
+    <script src="bg-remover-tool.js"></script>
+    <script src="crop-tool.js"></script>
+    <script src="navigation.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
