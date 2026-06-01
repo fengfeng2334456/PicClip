@@ -33,6 +33,9 @@ const App = {
 
         // 初始化裁剪工具
         CropTool.init();
+
+        // 初始化格式转换工具
+        FormatTool.init();
     }
 };
 

@@ -26,11 +26,29 @@ const I18n = {
             bg_desc: 'Make image background transparent with one click',
             bg_page_desc: 'Make your image background transparent',
 
-            // 即将推出的工具
+            // 图片压缩工具（即将推出）
             tool3_name: 'Image Compress',
             tool3_desc: 'Reduce image file size without losing quality',
+
+            // 格式转换工具
             tool4_name: 'Format Convert',
             tool4_desc: 'Convert images between PNG, JPG, WEBP formats',
+            format_page_desc: 'Convert images between different formats',
+            format_upload_text: 'Click or drag images here (batch)',
+            format_upload_hint: 'Supports: JPG, PNG, WEBP (multiple files)',
+            format_target_label: 'Target Format',
+            format_quality_label: 'Output Quality',
+            format_process_btn: 'Batch Convert',
+            format_download_btn: 'Download All (ZIP)',
+            format_no_images: 'Please upload images first',
+            format_done: 'images converted',
+            format_clear_btn: 'Clear All',
+            format_file_list: 'File List',
+            format_result_list: 'Result List',
+            format_original: 'Original',
+            format_converted: 'Converted',
+            format_size_info: 'Size: ',
+            format_tip: '💡 Tip: PNG is lossless, JPG and WEBP support quality adjustment. Higher quality = larger file size.',
 
             // 裁剪去水印工具
             crop_name: 'Crop & Remove Watermark',
@@ -138,11 +156,29 @@ const I18n = {
             bg_desc: '一键将图片背景变为透明',
             bg_page_desc: '将您的图片背景变为透明',
 
-            // 即将推出的工具
+            // 图片压缩工具（即将推出）
             tool3_name: '图片压缩',
             tool3_desc: '在不损失质量的情况下减小图片大小',
+
+            // 格式转换工具
             tool4_name: '格式转换',
             tool4_desc: '在 PNG、JPG、WEBP 格式之间转换',
+            format_page_desc: '在不同格式之间转换图片',
+            format_upload_text: '点击或拖拽图片到这里（支持批量）',
+            format_upload_hint: '支持：JPG、PNG、WEBP（多文件）',
+            format_target_label: '目标格式',
+            format_quality_label: '输出质量',
+            format_process_btn: '批量转换',
+            format_download_btn: '下载全部 (ZIP)',
+            format_no_images: '请先上传图片',
+            format_done: '张图片已转换',
+            format_clear_btn: '清空全部',
+            format_file_list: '文件列表',
+            format_result_list: '结果列表',
+            format_original: '原图',
+            format_converted: '转换后',
+            format_size_info: '大小：',
+            format_tip: '💡 提示：PNG 是无损格式，JPG 和 WEBP 支持质量调节。质量越高，文件越大。',
 
             // 裁剪去水印工具
             crop_name: '裁剪去水印',
